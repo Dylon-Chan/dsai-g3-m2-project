@@ -42,4 +42,29 @@ models:
         description: "The primary key for this table"
         tests:
           - not_null
+  - name: dim_customers
+    description: "Dimension table for customers"
+    columns:
+      - name: customer_id
+        description: "Customer ID. The primary key for this table"
+        tests:
+          - unique
+          - not_null
+      - name: customer_unique_id
+        description: "Customer unique ID"
+        tests:
+          - unique
+          - not_null
+      - name: customer_zip_code_prefix
+        description: "Customer zip code prefix"
+        tests:
+          - not_null
+      - name: customer_city
+        description: "Customer city"
+        tests:
+          - not_null
+      - name: customer_state
+        description: "Customer state"
+        tests:
+          - not_null
       
