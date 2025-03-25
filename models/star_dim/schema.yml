@@ -1,0 +1,15 @@
+
+version: 2
+
+models:
+
+  - name: dim_seller
+    description: "Dimension table for seller"
+    columns:
+      - name: seller_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+     
+      
