@@ -31,6 +31,36 @@ order_items_agg as (
         avg(oi.price) as avg_item_price
     from {{ source('gcs_ingestion', 'olist_order_items_dataset') }} as oi
     group by oi.order_id
+),
+
+order_by_customers_state as (
+
+    select
+        c.customer_state,
+        count(distinct o.order_id) as num_orders,
+        count(distinct o.customer_id) as num_customers,
+        sum(oia.num_items) as total_items,
+        sum(oia.total_order_revenue) as total_revenue
+    from order_details o join order_items_agg oia
+        on o.order_id = oia.order_id
+    join {{ source('gcs_ingestion', 'olist_customers_dataset') }} as c
+        on o.customer_id = c.customer_id
+    group by c.customer_state
+),
+
+order_by_customers_city as (
+
+    select
+        c.customer_city,
+        count(distinct o.order_id) as num_orders,
+        count(distinct o.customer_id) as num_customers,
+        sum(oia.num_items) as total_items,
+        sum(oia.total_order_revenue) as total_revenue
+    from order_details o join order_items_agg oia
+        on o.order_id = oia.order_id
+    join {{ source('gcs_ingestion', 'olist_customers_dataset') }} as c
+        on o.customer_id = c.customer_id
+    group by c.customer_city
 )
 
 select
