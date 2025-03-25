@@ -40,7 +40,8 @@ order_by_customers_state as (
         count(distinct o.order_id) as num_orders,
         count(distinct o.customer_id) as num_customers,
         sum(oia.num_items) as total_items,
-        sum(oia.total_order_revenue) as total_revenue
+        sum(oia.total_order_revenue) as total_revenue,
+        sum(oia.total_freight_cost) as total_freight_cost
     from order_details o join order_items_agg oia
         on o.order_id = oia.order_id
     join {{ source('gcs_ingestion', 'olist_customers_dataset') }} as c
@@ -55,7 +56,8 @@ order_by_customers_city as (
         count(distinct o.order_id) as num_orders,
         count(distinct o.customer_id) as num_customers,
         sum(oia.num_items) as total_items,
-        sum(oia.total_order_revenue) as total_revenue
+        sum(oia.total_order_revenue) as total_revenue,
+        sum(oia.total_freight_cost) as total_freight_cost
     from order_details o join order_items_agg oia
         on o.order_id = oia.order_id
     join {{ source('gcs_ingestion', 'olist_customers_dataset') }} as c
