@@ -13,3 +13,17 @@ ec_sales: # dbt_demo name. This is where dbt looks for from dbt_project.yml -> f
       keyfile: ../dsai-g3-m2-project-4ec07ed7098f.json
   config:
     send_anonymous_usage_stats: False
+e_commerce_dbt:
+  outputs:
+    dev:
+      dataset: brazilian_ecommerce_sales
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: "/Users/david/Documents/Documents - David\u2019s MacBook Pro/NTU_DSAI/Materials/Module2/Project/dsai-g3-m2-project-4ec07ed7098f.json"
+      location: US
+      method: service-account
+      priority: interactive
+      project: dsai-g3-m2-project
+      threads: 4
+      type: bigquery
+  target: dev
