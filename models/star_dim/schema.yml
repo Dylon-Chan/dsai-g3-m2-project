@@ -11,5 +11,25 @@ models:
         tests:
           - unique
           - not_null
+      - name: seller_zip_code
+        tests:
+          - unique
+          - not_null
+      - name: seller_city
+        tests:
+          - unique
+          - not_null
+      - name: seller_state
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: seller_total_order_revenue
+        tests:
+          - unique
+          - not_null
      
       
