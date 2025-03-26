@@ -11,7 +11,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: seller_zip_code
+      - name: seller_zip_code_prefix
         tests:
           - unique
           - not_null
@@ -20,10 +20,6 @@ models:
           - unique
           - not_null
       - name: seller_state
-        tests:
-          - unique
-          - not_null
-      - name: order_id
         tests:
           - unique
           - not_null
