@@ -15,7 +15,7 @@ seller_revenue_agg as (
     select
         sr.order_id,
         sr.seller_id
-        sum(sr.price) as total_order_revenue,
+        sum(sr.price) as seller_total_order_revenue,
     from {{ source('gcs_ingestion', 'olist_order_items_dataset') }} as sr
     group by sr.seller_id
 )
@@ -26,6 +26,6 @@ select
     sl.seller_city,
     sl.seller_state,
     sra.order_id,
-    sra.total_order_revenue,
+    sra.seller_total_order_revenue,
 from seller_loc sl join seller_revenue_agg sra
     on sl.seller_id = sr.seller_id
