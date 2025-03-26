@@ -13,19 +13,20 @@ models:
           - not_null
       - name: seller_zip_code_prefix
         tests:
-          - unique
           - not_null
+          - dbt_utils.accepted_range:
+              min_value: 00000
+              max_value: 99999
       - name: seller_city
         tests:
-          - unique
           - not_null
       - name: seller_state
         tests:
-          - unique
           - not_null
       - name: seller_total_order_revenue
         tests:
-          - unique
+          - dbt_utils.accepted_range:
+              min_value: 0
           - not_null
      
       
