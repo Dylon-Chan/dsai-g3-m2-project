@@ -1,31 +1,26 @@
-{{ config(materialized='table') }}
-
-
-with seller_loc as (
-    select
+WITH seller_loc AS (
+    SELECT
         s.seller_id,
-        s.seller_zip_code,
+        s.seller_zip_code_prefix,
         s.seller_city,
         s.seller_state
-    from {{ source('gcs_ingestion', 'olist_seller_dataset') }} as s
+    FROM {{ source('gcs_ingestion', 'olist_seller_dataset') }} AS s
 ),
 
 
-seller_revenue_agg as (
-    select
-        sr.order_id,
-        sr.seller_id
-        sum(sr.price) as seller_total_order_revenue,
-    from {{ source('gcs_ingestion', 'olist_order_items_dataset') }} as sr
-    group by sr.seller_id
+seller_revenue_agg AS (
+    SELECT
+        sr.seller_id,
+        SUM(sr.price) AS seller_total_order_revenue,
+    FROM {{ source('gcs_ingestion', 'olist_order_items_dataset') }} AS sr
+    GROUP BY sr.seller_id
 )
 
-select
-    sl.seller_id,
-    sl.seller_zip_code,
-    sl.seller_city,
-    sl.seller_state,
-    sra.order_id,
-    sra.seller_total_order_revenue,
-from seller_loc sl join seller_revenue_agg sra
-    on sl.seller_id = sr.seller_id
+SELECT
+    seller_loc.seller_id,
+    seller_loc.seller_zip_code_prefix,
+    seller_loc.seller_city,
+    seller_loc.seller_state,
+    seller_revenue_agg.seller_total_order_revenue,
+FROM seller_loc JOIN seller_revenue_agg
+    ON seller_loc.seller_id = seller_revenue_agg.seller_id
