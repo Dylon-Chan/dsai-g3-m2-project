@@ -37,3 +37,6 @@ with DAG(
         dbt run --target prod --profiles-dir .
         """,
     )
+
+    # Task Dependencies
+    dbt_deps >> dbt_run
