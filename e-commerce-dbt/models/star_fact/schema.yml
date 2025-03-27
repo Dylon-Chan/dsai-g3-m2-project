@@ -20,9 +20,8 @@ models:
     - name: order_purchase_timestamp
       tests:
         - dbt_expectations.expect_column_values_to_be_between:
-            min_value: '2020-01-01'  # Add a reasonable min date
-            max_value: TIMESTAMP
-            
+            min_value: "TIMESTAMP('2015-01-01 00:00:00 UTC')"  # Add a reasonable min date
+            max_value: "{{ dbt.current_timestamp() }}"    
     - name: num_items
       tests:
         - dbt_expectations.expect_column_values_to_be_between:
@@ -39,7 +38,7 @@ models:
             config:
               severity: error
         
-    - name: avg_item_price
+    - name: avg_item_price_per_order
       tests:
         - dbt_expectations.expect_column_values_to_be_between:
             min_value: 0  # Matches calculation

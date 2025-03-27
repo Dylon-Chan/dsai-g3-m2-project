@@ -62,3 +62,5 @@ sources:
         description: "Category name mapping data"
       - name: olist_customers_dataset  # Table name in BigQuery
         description: "Customer data"
+      - name: olist_sellers_dataset  # Table name in BigQuery
+        description: "Sellers data"
