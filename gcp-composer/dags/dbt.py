@@ -25,7 +25,7 @@ with DAG(
     dbt_deps = BashOperator(
         task_id='dbt_deps',
         bash_command="""
-        cd /home/airflow/gcs/data/ecommerce_dbt &&
+        cd /home/airflow/gcs/data/e-commerce-dbt &&
         dbt deps
         """,
     )
@@ -33,7 +33,7 @@ with DAG(
     dbt_run = BashOperator(
         task_id='dbt_run',
         bash_command="""
-        cd /home/airflow/gcs/data/ecommerce_dbt &&
-        dbt run --target prod --profiles-dir . > ../logs/dbt_run.log
+        cd /home/airflow/gcs/data/e-commerce-dbt &&
+        dbt run --target prod --profiles-dir .
         """,
     )
