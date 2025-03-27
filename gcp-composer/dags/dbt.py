@@ -26,7 +26,7 @@ with DAG(
     dbt_clean = BashOperator(
         task_id='dbt_clean',
         bash_command="""
-        cd /home/airflow/gcs/data/ecommerce_dbt &&
+        cd /home/airflow/gcs/data/e-commerce-dbt &&
         dbt clean
         """,
     )
@@ -35,7 +35,7 @@ with DAG(
     dbt_deps = BashOperator(
         task_id='dbt_deps',
         bash_command="""
-        cd /home/airflow/gcs/data/ecommerce_dbt &&
+        cd /home/airflow/gcs/data/e-commerce-dbt &&
         dbt deps
         """,
     )
@@ -44,8 +44,8 @@ with DAG(
     dbt_run = BashOperator(
         task_id='dbt_run',
         bash_command="""
-        cd /home/airflow/gcs/data/ecommerce_dbt &&
-        dbt run --target prod --profiles-dir . > ../logs/dbt_run.log
+        cd /home/airflow/gcs/data/e-commerce-dbt &&
+        dbt run --target prod --profiles-dir . > ../dbt-logs/dbt_run.log
         """,
     )
 
@@ -53,8 +53,8 @@ with DAG(
     dbt_test = BashOperator(
         task_id='dbt_test',
         bash_command="""
-        cd /home/airflow/gcs/data/ecommerce_dbt &&
-        dbt test --target prod --profiles-dir . > ../logs/dbt_test.log
+        cd /home/airflow/gcs/data/e-commerce-dbt &&
+        dbt test --target prod --profiles-dir . > ../dbt-logs/dbt_test.log
         """,
     )
 
