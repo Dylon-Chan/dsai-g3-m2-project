@@ -27,14 +27,8 @@ SELECT
     COALESCE(p.product_description_length, 0) AS product_description_length,
     COALESCE(p.product_photos_qty, 0) AS product_photos_qty,
     p.product_weight_g,
-    p.product_length_cm,
-    p.product_height_cm,
-    p.product_width_cm,
     p.product_volume_cm3,
 FROM product_details p LEFT JOIN category_name_translation cnt
 ON p.product_category_name = cnt.product_category_name_pt
-WHERE p.product_weight_g IS NOT NULL
-AND p.product_length_cm IS NOT NULL
-AND p.product_height_cm IS NOT NULL
-AND p.product_width_cm IS NOT NULL
+WHERE p.product_weight_g IS NOT NULL AND p.product_weight_g > 0
 AND p.product_volume_cm3 IS NOT NULL
