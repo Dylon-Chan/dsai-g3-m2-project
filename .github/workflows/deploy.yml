@@ -49,6 +49,7 @@ jobs:
           path: 'gcp-composer/dags'
           destination: 'composer-brazilian-ecommerce-bucket/dags'
           parent: false
+          process_gcloudignore: false
       
       # Upload DBT files to Composer GCS Bucket
       - name: Upload DBT files
@@ -57,3 +58,4 @@ jobs:
           path: 'e-commerce-dbt'
           destination: 'composer-brazilian-ecommerce-bucket/data'
           parent: false
+          process_gcloudignore: false
