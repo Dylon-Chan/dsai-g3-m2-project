@@ -45,7 +45,7 @@ with DAG(
         task_id='dbt_run',
         bash_command="""
         cd /home/airflow/gcs/data/e-commerce-dbt &&
-        dbt run --target prod --profiles-dir . > ../dbt-logs/dbt_run.log
+        dbt run --target prod --profiles-dir .
         """,
     )
 
@@ -58,5 +58,38 @@ with DAG(
         """,
     )
 
+    def get_log_tail(file, **kwargs):
+        try:
+            with open(f"/home/airflow/gcs/data/dbt-logs/{file}.log") as f:
+                lines = f.readlines()
+            tail = "\n".join(lines[-100:])
+        except FileNotFoundError:
+            tail = "[Log file not found]"
+        kwargs['ti'].xcom_push(key='log_tail', value=tail)
+
+    # Task 5a: Extract dbt_test log if test failed
+    extract_dbt_test_log = PythonOperator(
+        task_id="extract_dbt_test_log",
+        python_callable=get_log_tail,
+        provide_context=True,
+        op_kwargs={"file": "dbt_test"},
+        trigger_rule=TriggerRule.ONE_FAILED
+    )
+
+    # Task 5b: Send email notification if test failed
+    notify_dbt_test = EmailOperator(
+        task_id='notify_dbt_test',
+        to=['wengsiong22@gmail.com'],
+        subject='DBT Test Failed at {{ execution_date.in_timezone("Asia/Singapore").strftime("%Y-%m-%d %H:%M:%S") }}',
+        html_content="""
+            <p>The dbt test task failed.</p>
+            <p><b>Here are the last 100 lines of the test log:</b></p>
+            <pre>{{ ti.xcom_pull(task_ids='extract_dbt_test_log', key='log_tail') }}</pre>
+            <p>📄 Full logs: <a href="https://storage.cloud.google.com/composer-brazilian-ecommerce-bucket/data/dbt-logs/dbt_test.log">View in GCS</a></p>
+        """,
+        trigger_rule=TriggerRule.ONE_FAILED
+    )
+
     # Task Dependencies
-    dbt_clean >> dbt_deps >> dbt_run >> dbt_test
+    dbt_clean >> dbt_deps >> dbt_run >> dbt_test >> extract_dbt_test_log
+    [dbt_test, extract_dbt_test_log] >> notify_dbt_test
