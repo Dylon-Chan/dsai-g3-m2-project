@@ -22,21 +22,41 @@ with DAG(
     dagrun_timeout=timedelta(minutes=30),
 ) as dag:
 
-    dbt_deps = BashOperator(
-        task_id='dbt_deps',
+    # Task 1: Clean targets
+    dbt_clean = BashOperator(
+        task_id='dbt_clean',
         bash_command="""
-        cd /home/airflow/gcs/data/e-commerce-dbt &&
-        dbt deps --profiles-dir .
+        cd /home/airflow/gcs/data/ecommerce_dbt &&
+        dbt clean
         """,
     )
 
+    # Task 2: Install dbt packages
+    dbt_deps = BashOperator(
+        task_id='dbt_deps',
+        bash_command="""
+        cd /home/airflow/gcs/data/ecommerce_dbt &&
+        dbt deps
+        """,
+    )
+
+    # Task 3: Build dbt models
     dbt_run = BashOperator(
         task_id='dbt_run',
         bash_command="""
-        cd /home/airflow/gcs/data/e-commerce-dbt &&
-        dbt run --target prod --profiles-dir .
+        cd /home/airflow/gcs/data/ecommerce_dbt &&
+        dbt run --target prod --profiles-dir . > ../logs/dbt_run.log
+        """,
+    )
+
+    # Task 4: Test dbt models and schemas
+    dbt_test = BashOperator(
+        task_id='dbt_test',
+        bash_command="""
+        cd /home/airflow/gcs/data/ecommerce_dbt &&
+        dbt test --target prod --profiles-dir . > ../logs/dbt_test.log
         """,
     )
 
     # Task Dependencies
-    dbt_deps >> dbt_run
+    dbt_clean >> dbt_deps >> dbt_run >> dbt_test
