@@ -26,7 +26,7 @@ with DAG(
         task_id='dbt_deps',
         bash_command="""
         cd /home/airflow/gcs/data/e-commerce-dbt &&
-        dbt deps
+        dbt deps --profiles-dir .
         """,
     )
 
