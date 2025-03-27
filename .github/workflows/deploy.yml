@@ -57,5 +57,4 @@ jobs:
         with:
           path: 'e-commerce-dbt'
           destination: 'composer-brazilian-ecommerce-bucket/data'
-          parent: false
           process_gcloudignore: false
