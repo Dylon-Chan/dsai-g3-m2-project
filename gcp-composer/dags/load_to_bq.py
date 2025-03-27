@@ -2,6 +2,7 @@ from airflow import DAG
 from airflow.decorators import task
 from airflow.providers.google.cloud.hooks.gcs import GCSHook
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime, timedelta
 from typing import List, Dict
 
@@ -79,3 +80,9 @@ with DAG(
         write_disposition="WRITE_TRUNCATE",
         create_disposition="CREATE_IF_NEEDED",
     ).expand_kwargs(mappings)
+
+    # Task 5: Trigger next DAG
+    trigger_next = TriggerDagRunOperator(
+        task_id="trigger_downstream_dag",
+        trigger_dag_id="ecommerce_dbt",
+    )
