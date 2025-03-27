@@ -1,5 +1,5 @@
-name: CICD for Group 2 Chat Application - Production
-run-name: ${{ github.actor }} is running CICD for Group 2 Chat Application - Production
+name: Deploy DAG and DBT Files to GCP
+run-name: ${{ github.actor }} is uploading the data pipeline files to GCP.
 
 # The workflow will be triggered on push events to the "main" branch, which will be done when a pull request is merged into the "main" branch.
 on:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - run: echo "The job is automatically triggered by a ${{ github.event_name }} event on ${{ github.ref_name }} branch."
 
-  # This job handles deployment to the production environment
+  # This job handles deployment to the GCP
   deploy:
     runs-on: ubuntu-latest
     needs: [ pre-deploy ]   # This job depends on the completion of the 'pre-deploy' job.
@@ -35,13 +35,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Set up AWS credentials by using OIDC authentication which are stored in the Github Actions Secrets
+      # Set up GCP auth by using OIDC authentication which are stored in the Github Actions Secrets
       - name: Authenticate to GCP via OIDC
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.workload_identity_provider }}
           service_account: ${{ secrets.service_account }}
       
+      # Upload DAG Python files to Composer GCS Bucket
       - name: Upload DAG files
         uses: 'google-github-actions/upload-cloud-storage@v2'
         with:
@@ -49,6 +50,7 @@ jobs:
           destination: 'composer-brazilian-ecommerce-bucket/dags'
           parent: false
       
+      # Upload DBT files to Composer GCS Bucket
       - name: Upload DBT files
         uses: 'google-github-actions/upload-cloud-storage@v2'
         with:
