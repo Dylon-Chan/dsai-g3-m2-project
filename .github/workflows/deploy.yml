@@ -55,4 +55,4 @@ jobs:
       # Upload DBT files to Composer GCS Bucket
       - name: Upload DBT files
         run: |-
-          gsutil rsync -d -r e-commerce-dbt/ gs://composer-brazilian-ecommerce-bucket/data/e-commerce-dbt/
+          gsutil rsync -r e-commerce-dbt/ gs://composer-brazilian-ecommerce-bucket/data/e-commerce-dbt/
