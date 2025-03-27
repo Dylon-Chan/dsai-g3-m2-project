@@ -50,7 +50,7 @@ jobs:
       # Upload DAG Python files to Composer GCS Bucket
       - name: Upload DAG files
         run: |-
-          gsutil rsync -d -r gcp-composer/dags/ gs://composer-brazilian-ecommerce-bucket/dags/
+          gsutil rsync -r gcp-composer/dags/ gs://composer-brazilian-ecommerce-bucket/dags/
       
       # Upload DBT files to Composer GCS Bucket
       - name: Upload DBT files
