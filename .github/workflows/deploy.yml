@@ -42,19 +42,17 @@ jobs:
           workload_identity_provider: ${{ secrets.workload_identity_provider }}
           service_account: ${{ secrets.service_account }}
       
+      - name: Setup gcloud and gsutil
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '>= 363.0.0'
+      
       # Upload DAG Python files to Composer GCS Bucket
       - name: Upload DAG files
-        uses: 'google-github-actions/upload-cloud-storage@v2'
-        with:
-          path: 'gcp-composer/dags'
-          destination: 'composer-brazilian-ecommerce-bucket/dags'
-          parent: false
-          process_gcloudignore: false
+        run: |-
+          gsutil rsync -d -r gcp-composer/dags/ gs://composer-brazilian-ecommerce-bucket/dags/
       
       # Upload DBT files to Composer GCS Bucket
       - name: Upload DBT files
-        uses: 'google-github-actions/upload-cloud-storage@v2'
-        with:
-          path: 'e-commerce-dbt'
-          destination: 'composer-brazilian-ecommerce-bucket/data'
-          process_gcloudignore: false
+        run: |-
+          gsutil rsync -d -r e-commerce-dbt/ gs://composer-brazilian-ecommerce-bucket/data/e-commerce-dbt/
