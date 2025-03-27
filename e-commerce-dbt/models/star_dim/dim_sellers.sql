@@ -4,7 +4,7 @@ WITH seller_loc AS (
         s.seller_zip_code_prefix,
         s.seller_city,
         s.seller_state
-    FROM {{ source('gcs_ingestion', 'olist_seller_dataset') }} AS s
+    FROM {{ source('gcs_ingestion', 'olist_sellers_dataset') }} AS s
 ),
 
 

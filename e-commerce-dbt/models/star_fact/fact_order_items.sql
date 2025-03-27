@@ -14,7 +14,7 @@ with orders as (
         o.customer_id,
         o.order_status,
         o.order_purchase_timestamp
-    from {{ source('data_source', 'olist_orders_dataset') }} as o
+    from {{ source('gcs_ingestion', 'olist_orders_dataset') }} as o
 ),
 
 order_items as (
@@ -23,7 +23,7 @@ order_items as (
         order_item_id,
         product_id,   
         price 
-    from {{ source('data_source', 'olist_order_items_dataset') }} as oi
+    from {{ source('gcs_ingestion', 'olist_order_items_dataset') }} as oi
 )
 
 select

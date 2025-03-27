@@ -11,37 +11,33 @@ models:
           - unique
           - not_null
       - name: product_category_name
-        description: "The primary key for this table"
         tests:
           - not_null
       - name: product_name_length
-        description: "The primary key for this table"
         tests:
-          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0 
+              max_value: 100  # Add a reasonable upper limit
       - name: product_description_length
-        description: "The primary key for this table"
         tests:
-          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0 
+              max_value: 5000  # Add a reasonable upper limit
       - name: product_photos_qty
-        description: "The primary key for this table"
         tests:
-          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0 
+              max_value: 30  # Add a reasonable upper limit
       - name: product_weight_g
-        description: "The primary key for this table"
         tests:
-          - not_null
-      - name: product_length_cm
-        description: "The primary key for this table"
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0 
+              strictly: True # Values must be greater than 0
+      - name: product_volume_cm3
         tests:
-          - not_null
-      - name: product_height_cm
-        description: "The primary key for this table"
-        tests:
-          - not_null
-      - name: product_width_cm
-        description: "The primary key for this table"
-        tests:
-          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0 
+              strictly: True # Values must be greater than 0
   - name: dim_customers
     description: "Dimension table for customers"
     columns:
@@ -73,5 +69,30 @@ models:
           - dbt_expectations.expect_column_value_lengths_to_be_between:
               min_value: 1
               max_value: 2
+  - name: dim_sellers
+    description: "Dimension table for seller"
+    columns:
+      - name: seller_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 00000
+              max_value: 99999
+      - name: seller_city
+        tests:
+          - not_null
+      - name: seller_state
+        tests:
+          - not_null
+      - name: seller_total_order_revenue
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+          - not_null
 
       
