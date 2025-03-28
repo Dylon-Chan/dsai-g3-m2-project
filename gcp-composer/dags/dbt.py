@@ -104,9 +104,9 @@ with DAG(
     # Task 7: Host the DBT docs site in GCS bucket
     host_dbt_docs = GCSToGCSOperator(
         task_id='host_dbt_docs',
-        source_bucket='asia-southeast1-extract-dat-04cab4b8-bucket',
-        source_object='data/ecommerce_dbt/target/*',
-        destination_bucket='wengsiong-test-dbt-docs',
+        source_bucket='composer-brazilian-ecommerce-bucket',
+        source_object='data/e-commerce-dbt/target*',
+        destination_bucket='brazilian-ecommerce-dbt-docs',
         destination_object='target/',
     )
 
