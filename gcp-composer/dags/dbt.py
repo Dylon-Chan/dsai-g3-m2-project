@@ -96,9 +96,9 @@ with DAG(
         task_id='dbt_docs',
         bash_command="""
         cd /home/airflow/gcs/data/e-commerce-dbt &&
-        dbt docs generate --target prod --static --profiles-dir .
+        dbt docs generate --target prod --static --compile-results --profiles-dir .
         """,
-        # trigger_rule=TriggerRule.ALL_SUCCESS
+        trigger_rule=TriggerRule.ALL_SUCCESS
     )
 
     # Task 7: Host the DBT docs site in GCS bucket
@@ -111,5 +111,6 @@ with DAG(
     )
 
     # Task Dependencies
-    dbt_clean >> dbt_deps >> dbt_run >> dbt_test >> extract_dbt_test_log >> dbt_docs >> host_dbt_docs
+    dbt_clean >> dbt_deps >> dbt_run >> dbt_test >> extract_dbt_test_log
+    dbt_test >> dbt_docs >> host_dbt_docs
     [dbt_test, extract_dbt_test_log] >> notify_dbt_test
