@@ -5,6 +5,7 @@ from airflow.operators.email import EmailOperator
 from airflow.utils.trigger_rule import TriggerRule
 from datetime import datetime, timedelta
 import pendulum
+from airflow.providers.google.cloud.transfers.gcs_to_gcs import GCSToGCSOperator
 
 default_args = {
     'retries': 1,
@@ -90,6 +91,25 @@ with DAG(
         trigger_rule=TriggerRule.ONE_FAILED
     )
 
+    # Task 6: Build DBT documentations static site
+    dbt_docs = BashOperator(
+        task_id='dbt_docs',
+        bash_command="""
+        cd /home/airflow/gcs/data/e-commerce-dbt &&
+        dbt docs generate --target prod --static --profiles-dir .
+        """,
+        # trigger_rule=TriggerRule.ALL_SUCCESS
+    )
+
+    # Task 7: Host the DBT docs site in GCS bucket
+    host_dbt_docs = GCSToGCSOperator(
+        task_id='host_dbt_docs',
+        source_bucket='asia-southeast1-extract-dat-04cab4b8-bucket',
+        source_object='data/ecommerce_dbt/target/*',
+        destination_bucket='wengsiong-test-dbt-docs',
+        destination_object='target/',
+    )
+
     # Task Dependencies
-    dbt_clean >> dbt_deps >> dbt_run >> dbt_test >> extract_dbt_test_log
+    dbt_clean >> dbt_deps >> dbt_run >> dbt_test >> extract_dbt_test_log >> dbt_docs >> host_dbt_docs
     [dbt_test, extract_dbt_test_log] >> notify_dbt_test
