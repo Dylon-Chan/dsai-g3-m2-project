@@ -21,7 +21,8 @@ order_items as (
     select
         oi.order_id,
         order_item_id,
-        product_id,   
+        product_id,
+        seller_id,   
         price 
     from {{ source('gcs_ingestion', 'olist_order_items_dataset') }} as oi
 )
@@ -33,6 +34,7 @@ select
     od.order_purchase_timestamp,
     oi.order_item_id,
     oi.product_id,
+    oi.seller_id,
     oi.price
 from orders od join order_items oi
     on od.order_id = oi.order_id
