@@ -33,7 +33,7 @@ with DAG(
     # Task 1: Use BashOperator to run Kaggle command and download the dataset
     download_data_from_kaggle = BashOperator(
         task_id='download_data_from_kaggle',
-        bash_command=f'mkdir -p /tmp/data && kaggle datasets download -d {dataset} -p /tmp/data',
+        bash_command=f'mkdir -p /tmp/data && kaggle datasets download -d {dataset} --force -p /tmp/data',
     )
 
     # Task 2: Unzip the downloaded file using PythonOperator
