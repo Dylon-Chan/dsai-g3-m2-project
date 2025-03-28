@@ -86,7 +86,7 @@ with DAG(
             <p>The dbt test task failed.</p>
             <p><b>Here are the last 100 lines of the test log:</b></p>
             <pre>{{ ti.xcom_pull(task_ids='extract_dbt_test_log', key='log_tail') }}</pre>
-            <p>📄 Full logs: <a href="https://storage.cloud.google.com/composer-brazilian-ecommerce-bucket/data/dbt-logs/dbt_test.log">View in GCS</a></p>
+            <p>Full logs: <a href="https://storage.cloud.google.com/composer-brazilian-ecommerce-bucket/data/dbt-logs/dbt_test.log">View in GCS</a></p>
         """,
         trigger_rule=TriggerRule.ONE_FAILED
     )
@@ -96,7 +96,7 @@ with DAG(
         task_id='dbt_docs',
         bash_command="""
         cd /home/airflow/gcs/data/e-commerce-dbt &&
-        dbt docs generate --target prod --static --compile-results --profiles-dir .
+        dbt docs generate --target prod --static --profiles-dir .
         """,
         trigger_rule=TriggerRule.ALL_SUCCESS
     )
