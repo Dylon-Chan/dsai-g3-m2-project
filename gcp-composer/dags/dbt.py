@@ -105,7 +105,7 @@ with DAG(
     host_dbt_docs = GCSToGCSOperator(
         task_id='host_dbt_docs',
         source_bucket='composer-brazilian-ecommerce-bucket',
-        source_object='data/e-commerce-dbt/target*',
+        source_object='data/e-commerce-dbt/target/*',
         destination_bucket='brazilian-ecommerce-dbt-docs',
         destination_object='target/',
     )
