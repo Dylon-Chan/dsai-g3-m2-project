@@ -66,7 +66,7 @@ with DAG(
     mappings = map_files_to_tables(file_list, config)
 
     # Task 4: Load each csv file as a table to BigQuery
-    GCSToBigQueryOperator.partial(
+    load_to_bq = GCSToBigQueryOperator.partial(
         retries=3,
         retry_delay=timedelta(minutes=2),
         task_id=f"load_to_bq",
@@ -86,3 +86,6 @@ with DAG(
         task_id="trigger_downstream_dag",
         trigger_dag_id="ecommerce_dbt",
     )
+
+    # Task Dependencies
+    load_to_bq >> trigger_next
